@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31424.327
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WikiMerge", "src\WikiMerge\WikiMerge.csproj", "{1129B39A-243A-422C-9793-1DE8EDAB817A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WikiMerge.Core", "src\WikiMerge.Core\WikiMerge.Core.csproj", "{4FBD9F19-26BA-4908-B468-983A947C4B0F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WikiMerge.Test", "src\WikiMerge.Test\WikiMerge.Test.csproj", "{16387D43-5D9C-436C-B294-4DE37A4A3D39}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{68F935F2-C363-4246-ACC4-A52C95740235}"
+	ProjectSection(SolutionItems) = preProject
+		azure-pipelines.yaml = azure-pipelines.yaml
+		coverlet.runsettings = coverlet.runsettings
+		gitversion.yml = gitversion.yml
+		Readme.md = Readme.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1129B39A-243A-422C-9793-1DE8EDAB817A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1129B39A-243A-422C-9793-1DE8EDAB817A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1129B39A-243A-422C-9793-1DE8EDAB817A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1129B39A-243A-422C-9793-1DE8EDAB817A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FBD9F19-26BA-4908-B468-983A947C4B0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FBD9F19-26BA-4908-B468-983A947C4B0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FBD9F19-26BA-4908-B468-983A947C4B0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FBD9F19-26BA-4908-B468-983A947C4B0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16387D43-5D9C-436C-B294-4DE37A4A3D39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16387D43-5D9C-436C-B294-4DE37A4A3D39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16387D43-5D9C-436C-B294-4DE37A4A3D39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16387D43-5D9C-436C-B294-4DE37A4A3D39}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {10EF83C9-5900-4B78-80EC-2C6C8E67E167}
+	EndGlobalSection
+EndGlobal
