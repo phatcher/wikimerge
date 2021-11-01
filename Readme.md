@@ -48,11 +48,11 @@ Depending on where you are running this from and whether you want to split the p
 
 After building from the root directory of the project 
 
-`dotnet tool install dotnet-wikimerge -g --add-source build\Debug\WikiMerge\netcoreapp3.1`
+`dotnet tool install dotnet-wikimerge -g --add-source src\WikiMerge\bin\Debug`
 
 or 
 
-`dotnet tool update dotnet-wikimerge -g --add-source build\Debug\WikiMerge\netcoreapp3.1`
+`dotnet tool update dotnet-wikimerge -g --add-source src\WikiMerge\bin\Debug`
 
 
 # License

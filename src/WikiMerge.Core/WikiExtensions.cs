@@ -34,6 +34,11 @@ namespace WikiMerge
             return new Repository(gitPath);
         }
 
+        public static string AttachmentPath(this Wiki wiki)
+        {
+            return wiki.CheckoutDirectory.AttachmentPath();
+        }
+
         public static UsernamePasswordCredentials ToGitCredentials(this Credentials credentials)
         {
             return new UsernamePasswordCredentials

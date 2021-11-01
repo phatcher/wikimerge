@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net;
-
+using System.Text.RegularExpressions;
 using LibGit2Sharp;
+using Microsoft.Extensions.Logging;
 
 namespace WikiMerge
 {
@@ -51,6 +53,43 @@ namespace WikiMerge
                 CheckoutDirectory = source.IsRepo() ? Path.Combine(options.WorkingDirectory, name) : source,
                 Credentials = options.ToCredentials()
             };
+        }
+
+        public static void VerifyOrder(this DirectoryInfo path)
+        {
+            var name = path.Name;
+            var parent = path.Parent;
+            var order = parent.GetFiles(".order").ToList().FirstOrDefault();
+            if (order == null)
+            {
+                using (var writer = new StreamWriter(Path.Combine(parent.FullName, ".order")))
+                {
+                    writer.Write($"{name}");
+                }
+                VerifyOrder(parent);
+            }
+            else
+            {
+                // TODO: Check the name is in there if not add it at the end/position
+            }
+        }
+
+        public static void FixAttachmentReferences(this string fileName, string sourcePath, string targetPath, bool renameImages, ILogger logger)
+        {
+            const string attachmentFinder = @"\[(?<caption>.+)\]\((?<path>/.attachments)/(?<name>.+)\)";
+
+            logger.LogInformation($"Attachments will be output to ${targetPath}");
+
+            var fixer = new AttachmentFixer(sourcePath, targetPath, renameImages, logger);
+
+            // Get the data
+            var source = File.ReadAllText(fileName);
+
+            // Fix up the references, plus copy the files
+            var result = Regex.Replace(source, attachmentFinder, fixer.Replace);
+
+            // And write back the updated references
+            File.WriteAllText(fileName, result);
         }
 
         public static bool IsRepo(this string source)
