@@ -3,8 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+
 using LibGit2Sharp;
-using Microsoft.Extensions.Logging;
 
 namespace WikiMerge
 {
@@ -14,7 +14,7 @@ namespace WikiMerge
         {
             return new Credentials
             {
-                Username = options.Username ?? "pat",
+                Username = string.IsNullOrEmpty(options.Username) ? "pat" : options.Username,
                 Password = options.Password
             };
         }
@@ -74,38 +74,55 @@ namespace WikiMerge
             }
         }
 
-        public static void FixAttachmentReferences(this string fileName, string sourcePath, string targetPath, bool renameImages, ILogger logger)
+        /// <summary>
+        /// Change the path reference for images within some markdown, optionally renaming the image files
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="sourcePath"></param>
+        /// <param name="targetPath"></param>
+        /// <param name="renameImages"></param>
+        /// <param name="fileAction"></param>
+        /// <returns></returns>
+        public static string FixAttachmentReferences(this string source, string sourcePath, string targetPath, bool renameImages, Action<string, string> fileAction = null)
         {
-            const string attachmentFinder = @"\[(?<caption>.+)\]\((?<path>/.attachments)/(?<name>.+)\)";
+            var fixer = new AttachmentFixer(sourcePath, targetPath, renameImages, fileAction);
 
-            logger.LogInformation($"Attachments will be output to ${targetPath}");
+            // Fix up the references
+            var result = fixer.Fix(source);
 
-            var fixer = new AttachmentFixer(sourcePath, targetPath, renameImages, logger);
-
-            // Get the data
-            var source = File.ReadAllText(fileName);
-
-            // Fix up the references, plus copy the files
-            var result = Regex.Replace(source, attachmentFinder, fixer.Replace);
-
-            // And write back the updated references
-            File.WriteAllText(fileName, result);
+            return result;
         }
 
         public static bool IsRepo(this string source)
         {
-            // Bit of a hack but best we could find
-            var uri = new Uri(source);
-            switch (uri.Scheme.ToLowerInvariant())
+            try
             {
-                case "http":
-                case "https":
-                case "git":
-                    return true;
+                // Bit of a hack but best we could find
+                var uri = new Uri(source);
+                switch (uri.Scheme.ToLowerInvariant())
+                {
+                    case "http":
+                    case "https":
+                    case "git":
+                        return true;
 
-                default:
-                    return false;
+                    default:
+                        return false;
+                }
             }
+            catch (Exception ex)
+            {
+                // TODO: Log this
+                // Probably an ssh address which we can't handle
+                return false;
+            }
+        }
+
+        public static bool IsMarkdown(this string fileName)
+        {
+            var file = new FileInfo(fileName);
+
+            return file.Extension == ".md";
         }
 
         /// <summary>
@@ -170,11 +187,12 @@ namespace WikiMerge
                 if (value.IndexOf("%3A", StringComparison.InvariantCultureIgnoreCase) == 1)
                 {
                     // Just replace the first %2D with a colon as it's a drive letter
-                    value = $"{value[0]}:{value.Substring(4)}";
+                    value = $"{value[0]}:{value[4..]}";
                 }
                 // So it works for path
-                value = value?.Replace("%5C", "\\");
-                value = value?.Replace("%2F", "/");
+                value = value.Replace("%25", "%");
+                value = value.Replace("%5C", "\\");
+                value = value.Replace("%2F", "/");
             }
 
             return value;

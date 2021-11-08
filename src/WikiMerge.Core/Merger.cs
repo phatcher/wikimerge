@@ -43,8 +43,9 @@ namespace WikiMerge
             var targetDir = Directory.CreateDirectory(targetPath);
 
             // Copy the tree
+            logger.LogInformation($"Attachments will be output to ${Target.AttachmentPath()}");
             var sourcePath = Path.Combine(Source.CheckoutDirectory, Source.Path);
-            var copier = new Copier(Source.AttachmentPath(), Target.AttachmentPath(), options.RenameImages, logger);
+            var copier = new Copier(Source.AttachmentPath(), Target.AttachmentPath(), options.RenameImages);
             copier.CopyFolder(sourcePath, targetPath);
 
             // Fix up the target directory order file
