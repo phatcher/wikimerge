@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
 
 using LibGit2Sharp;
 
@@ -59,10 +58,18 @@ namespace WikiMerge
         {
             var name = path.Name;
             var parent = path.Parent;
+
+            var md = Path.Combine(parent.FullName, $"{name}.md");
+            if (!File.Exists(md))
+            {
+                // TODO: Do we want any content?
+                File.Create(md);
+            }
+
             var order = parent.GetFiles(".order").ToList().FirstOrDefault();
             if (order == null)
             {
-                using (var writer = new StreamWriter(Path.Combine(parent.FullName, ".order")))
+                using (var writer = new StreamWriter(order.FullName))
                 {
                     writer.Write($"{name}");
                 }
@@ -70,7 +77,17 @@ namespace WikiMerge
             }
             else
             {
-                // TODO: Check the name is in there if not add it at the end/position
+                var lines = File.ReadAllText(order.FullName);
+                // Check the name is in there 
+                if (!lines.Contains(name))
+                {
+                    using (var writer = File.AppendText(order.FullName))
+                    {
+                        // Terminate the previous line and add our new content
+                        writer.WriteLine();
+                        writer.Write(name);
+                    }
+                }
             }
         }
 
